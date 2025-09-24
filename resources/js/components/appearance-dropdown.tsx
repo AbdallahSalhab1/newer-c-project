@@ -1,0 +1,55 @@
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useAppearance } from '@/hooks/use-appearance';
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { HTMLAttributes } from 'react';
+import { useTranslation } from '@/Hooks/useTranslation'; // Add this import
+
+export default function AppearanceToggleDropdown({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
+    const { appearance, updateAppearance } = useAppearance();
+    const { t } = useTranslation(); // Add hook
+
+    const getCurrentIcon = () => {
+        switch (appearance) {
+            case 'dark':
+                return <Moon className="h-5 w-5" />;
+            case 'light':
+                return <Sun className="h-5 w-5" />;
+            default:
+                return <Monitor className="h-5 w-5" />;
+        }
+    };
+
+    return (
+        <div className={className} {...props}>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-md">
+                        {getCurrentIcon()}
+                        <span className="sr-only">{t('messages.toggle_theme')}</span> {/* Translated */}
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => updateAppearance('light')}>
+                        <span className="flex items-center gap-2">
+                            <Sun className="h-5 w-5" />
+                            {t('messages.light')} {/* Translated */}
+                        </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateAppearance('dark')}>
+                        <span className="flex items-center gap-2">
+                            <Moon className="h-5 w-5" />
+                            {t('messages.dark')} {/* Translated */}
+                        </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateAppearance('system')}>
+                        <span className="flex items-center gap-2">
+                            <Monitor className="h-5 w-5" />
+                            {t('messages.system')} {/* Translated */}
+                        </span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
+}
